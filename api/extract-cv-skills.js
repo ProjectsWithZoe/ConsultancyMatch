@@ -4,7 +4,7 @@ import path from "path";
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import mammoth from "mammoth";
-import pdfjsLib from "pdfjs-dist";
+import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
 
 dotenv.config();
 
