@@ -3,13 +3,11 @@ import { supabase } from "../lib/supabase"; // Assuming Supabase for authenticat
 import toast from "react-hot-toast";
 
 const CompatibilityCalculator = () => {
-  const [user, setUser] = useState(null);
   const [consultantSkills, setConsultantSkills] = useState([]);
   const [jobDescription, setJobDescription] = useState("");
   const [cvFile, setCvFile] = useState(null);
   const [extractedJobSkills, setExtractedJobSkills] = useState([]);
   const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [gettingCV, setGettingCV] = useState(false);
   const [gettingJobSkills, setGettingJobSkills] = useState(false);
   const [gettingComparison, setGettingComparison] = useState(false);

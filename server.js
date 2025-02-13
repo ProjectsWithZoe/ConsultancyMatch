@@ -61,7 +61,7 @@ app.post("/api/extract-job-skills", async (req, res) => {
       .filter((skill) => skill && skill !== "Key Professional Skills:") // Filter out empty strings and the title line
       .map((skill) => skill.replace(/\(Preferred\)/g, "")) // Remove "Preferred" text
       .map((skill) => skill.replace(/[.,]/g, "")) // Remove commas or periods
-      .map((skill) => skill.replace(/\d+/g, "")) // ✅ Remove any numbers
+      .map((skill) => skill.replace(/\d+/g, "")) // Remove any numbers
       .map((skill) => {
         // Split compound skills like "Natural Language Processing (NLP) computer vision"
         return skill
