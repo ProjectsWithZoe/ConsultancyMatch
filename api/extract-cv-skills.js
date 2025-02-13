@@ -5,7 +5,7 @@ import OpenAI from "openai";
 import dotenv from "dotenv";
 import mammoth from "mammoth";
 import * as pdfjsLib from "pdfjs-dist";
-import pdf from "pdf-parse";
+import pdf from "pdf-parse/lib/pdf-parse.js";
 
 dotenv.config();
 
