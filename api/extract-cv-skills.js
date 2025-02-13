@@ -3,13 +3,12 @@ import fs from "fs";
 import path from "path";
 import OpenAI from "openai";
 import dotenv from "dotenv";
+import pdfParse from "pdf-parse";
 import mammoth from "mammoth";
-import * as pdfjsLib from "pdfjs-dist";
-import pdf from "pdf-parse/lib/pdf-parse.js";
 
 dotenv.config();
 
-// Configure multer to store uploaded files in the /tmp directory (for serverless environments)
+// Configure multer to store uploaded files in the /tmp directory
 const upload = multer({ dest: "/tmp/" });
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -18,22 +17,21 @@ const openai = new OpenAI({
 // Function to extract text from PDF
 const extractTextFromPdf = async (filePath) => {
   const dataBuffer = fs.readFileSync(filePath);
-  const { text } = await pdf(dataBuffer);
-  return text;
+  const data = await pdfParse(dataBuffer);
+  return data.text;
 };
 
 // Function to extract text from DOCX
 const extractTextFromDocx = async (filePath) => {
   const docxBuffer = fs.readFileSync(filePath);
-  console.log(docxBuffer);
   const { value } = await mammoth.extractRawText({ buffer: docxBuffer });
   return value;
 };
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    // Handle file upload using multer middleware
-    upload.single("cvFile")(req, res, async (err) => {
+    // Use multer to handle file upload
+    upload.single("cv")(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ error: "File upload failed." });
       }
