@@ -3,8 +3,8 @@ import fs from "fs";
 import path from "path";
 import OpenAI from "openai";
 import dotenv from "dotenv";
-import pdfParse from "pdf-parse";
 import mammoth from "mammoth";
+import pdfjsLib from "pdfjs-dist";
 
 dotenv.config();
 
@@ -15,10 +15,17 @@ const openai = new OpenAI({
 });
 
 // Function to extract text from PDF
+
 const extractTextFromPdf = async (filePath) => {
-  const dataBuffer = fs.readFileSync(filePath);
-  const data = await pdfParse(dataBuffer);
-  return data.text;
+  const data = new Uint8Array(fs.readFileSync(filePath));
+  const pdf = await pdfjsLib.getDocument(data).promise;
+  let text = "";
+  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+    const page = await pdf.getPage(pageNum);
+    const textContent = await page.getTextContent();
+    text += textContent.items.map((item) => item.str).join(" ");
+  }
+  return text;
 };
 
 // Function to extract text from DOCX
