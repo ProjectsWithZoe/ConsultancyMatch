@@ -8,17 +8,18 @@ import * as pdfjsLib from "pdfjs-dist";
 
 dotenv.config();
 
-// Configure multer to store uploaded files in the /tmp directory
+// Configure multer to store uploaded files in the /tmp directory (for serverless environments)
 const upload = multer({ dest: "/tmp/" });
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 // Function to extract text from PDF
-
 const extractTextFromPdf = async (filePath) => {
   const data = new Uint8Array(fs.readFileSync(filePath));
+  console.log(data);
   const pdf = await pdfjsLib.getDocument(data).promise;
+  console.log(pdf);
   let text = "";
   for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
     const page = await pdf.getPage(pageNum);
@@ -31,13 +32,14 @@ const extractTextFromPdf = async (filePath) => {
 // Function to extract text from DOCX
 const extractTextFromDocx = async (filePath) => {
   const docxBuffer = fs.readFileSync(filePath);
+  console.log(docxBuffer);
   const { value } = await mammoth.extractRawText({ buffer: docxBuffer });
   return value;
 };
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    // Use multer to handle file upload
+    // Handle file upload using multer middleware
     upload.single("cvFile")(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ error: "File upload failed." });
