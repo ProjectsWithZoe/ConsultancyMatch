@@ -41,14 +41,11 @@ const CompatibilityCalculator = () => {
     setGettingJobSkills(true);
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/extract-job-skills",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ jobDescription: description }),
-        }
-      );
+      const response = await fetch("/api/extract-job-skills", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jobDescription: description }),
+      });
 
       const data = await response.json();
 
@@ -73,13 +70,10 @@ const CompatibilityCalculator = () => {
     setGettingCV(true);
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/extract-cv-skills",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch("/api/extract-cv-skills", {
+        method: "POST",
+        body: formData,
+      });
 
       const data = await response.json();
       console.log("Extracted CV Skills:", data.cvSkills);
@@ -105,7 +99,7 @@ const CompatibilityCalculator = () => {
 
     setGettingComparison(true);
     try {
-      const response = await fetch("http://localhost:5000/api/compare-skills", {
+      const response = await fetch("/api/compare-skills", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Ensure this header is set
