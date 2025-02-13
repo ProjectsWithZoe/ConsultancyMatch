@@ -259,7 +259,9 @@ const CompatibilityCalculator = () => {
           <button
             onClick={() => compareSkills(consultantSkills, extractedJobSkills)}
             className="flex flex-col bg-indigo-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-indigo-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
-            disabled={gettingComparison}
+            disabled={
+              gettingComparison || !extractedJobSkills || !consultantSkills
+            }
           >
             {gettingComparison
               ? "Analyzing Compatibility ..."
