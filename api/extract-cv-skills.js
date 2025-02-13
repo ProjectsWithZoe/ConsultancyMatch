@@ -4,22 +4,28 @@ import path from "path";
 import OpenAI from "openai";
 import dotenv from "dotenv";
 
-import pdf from "pdf-parse/lib/pdf-parse";
+import pdfParse from "pdf-parse";
 import mammoth from "mammoth";
-
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const pdf = require("pdf-parse");
 dotenv.config();
-
-// Configure multer to store uploaded files in the /tmp directory
 const upload = multer({ dest: "/tmp/" });
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 // Function to extract text from PDF
 const extractTextFromPdf = async (filePath) => {
-  const dataBuffer = fs.readFileSync(filePath);
-  const data = await pdf(dataBuffer);
-  return data.text;
+  try {
+    const dataBuffer = fs.readFileSync(filePath);
+    const data = await pdf(dataBuffer);
+    return data.text;
+  } catch (error) {
+    console.error("Error extracting text from PDF:", error);
+    throw error;
+  }
 };
 
 // Function to extract text from DOCX
