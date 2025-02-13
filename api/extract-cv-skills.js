@@ -3,7 +3,8 @@ import fs from "fs";
 import path from "path";
 import OpenAI from "openai";
 import dotenv from "dotenv";
-import pdfParse from "pdf-parse";
+
+import pdf from "pdf-parse/lib/pdf-parse";
 import mammoth from "mammoth";
 
 dotenv.config();
@@ -17,7 +18,7 @@ const openai = new OpenAI({
 // Function to extract text from PDF
 const extractTextFromPdf = async (filePath) => {
   const dataBuffer = fs.readFileSync(filePath);
-  const data = await pdfParse(dataBuffer);
+  const data = await pdf(dataBuffer);
   return data.text;
 };
 
