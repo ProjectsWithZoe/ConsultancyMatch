@@ -5,6 +5,7 @@ import OpenAI from "openai";
 import dotenv from "dotenv";
 import mammoth from "mammoth";
 import * as pdfjsLib from "pdfjs-dist";
+import pdf from "pdf-parse";
 
 dotenv.config();
 
@@ -16,16 +17,8 @@ const openai = new OpenAI({
 
 // Function to extract text from PDF
 const extractTextFromPdf = async (filePath) => {
-  const data = new Uint8Array(fs.readFileSync(filePath));
-  console.log(data);
-  const pdf = await pdfjsLib.getDocument(data).promise;
-  console.log(pdf);
-  let text = "";
-  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-    const page = await pdf.getPage(pageNum);
-    const textContent = await page.getTextContent();
-    text += textContent.items.map((item) => item.str).join(" ");
-  }
+  const dataBuffer = fs.readFileSync(filePath);
+  const { text } = await pdf(dataBuffer);
   return text;
 };
 
