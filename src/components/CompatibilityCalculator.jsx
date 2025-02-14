@@ -17,6 +17,7 @@ const CompatibilityCalculator = () => {
   const [matchPercentage, setMatchPercentage] = useState("");
   const [file, setFile] = useState(null);
   const [text, setText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   //Handle Job Description Input and Skills Extraction
   const handleJobDescriptionChange = async (e) => {
