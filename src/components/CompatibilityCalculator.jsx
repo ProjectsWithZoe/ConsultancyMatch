@@ -33,6 +33,10 @@ const CompatibilityCalculator = () => {
     }
     setCvFile(file);
   };*/
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
   const handleUpload = async () => {
     if (!file) return alert("Select a PDF file first!");
 
