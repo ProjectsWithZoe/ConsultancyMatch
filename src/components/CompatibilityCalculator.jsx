@@ -69,17 +69,34 @@ const CompatibilityCalculator = () => {
     const formData = new FormData();
     formData.append("pdf", cvFile);
 
-    const response = await fetch("/api/upload", {
-      method: "POST",
-      body: formData,
-    });
-    const data = await response.json();
-    console.log("Data", data);
-    console.log("Extracted CV Skills:", data.cvSkills);
-    setConsultantSkills(data.cvSkills);
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
 
-    //const data = await response.json();
-    //console.log("Extracted text:", data.text);
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Data", data);
+
+      if (data.text) {
+        console.log("Extracted Text:", data.text);
+      } else {
+        console.warn("No text extracted from PDF.");
+      }
+
+      if (data.cvSkills) {
+        console.log("Extracted CV Skills:", data.cvSkills);
+        setConsultantSkills(data.cvSkills);
+      } else {
+        console.warn("cvSkills is undefined.");
+      }
+    } catch (error) {
+      console.error("Error uploading PDF:", error);
+    }
   }
 
   // 2 .get consultant skills from CV
