@@ -4,7 +4,7 @@ import pdfParse from "pdf-parse";
 
 export const config = {
   api: {
-    bodyParser: false, // Required for handling file uploads
+    bodyParser: false, // Disable default body parsing for file uploads
   },
 };
 
@@ -13,27 +13,26 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const form = new formidable.IncomingForm();
-  form.uploadDir = "/tmp"; // Temporary storage for Vercel
-  form.keepExtensions = true;
+  const form = formidable({
+    uploadDir: "/tmp", // Temporary directory for uploaded files
+    keepExtensions: true,
+  });
 
-  form.parse(req, async (err, fields, files) => {
-    if (err) {
-      return res.status(500).json({ error: "Error parsing file" });
-    }
+  try {
+    const [fields, files] = await form.parse(req);
+    const pdfFile = files.pdf?.[0]?.filepath; // Correct way to access the file
 
-    const pdfPath = files.pdf?.filepath;
-    if (!pdfPath) {
+    if (!pdfFile) {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
-    try {
-      const dataBuffer = fs.readFileSync(pdfPath);
-      const pdfData = await pdfParse(dataBuffer);
+    const dataBuffer = fs.readFileSync(pdfFile);
+    const pdfData = await pdfParse(dataBuffer);
 
-      res.status(200).json({ text: pdfData.text });
-    } catch (error) {
-      res.status(500).json({ error: "Error extracting text" });
-    }
-  });
+    res.status(200).json({ text: pdfData.text });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Error extracting text", details: error.message });
+  }
 }
