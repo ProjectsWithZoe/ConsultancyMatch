@@ -23,6 +23,8 @@ function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [file, setFile] = useState(null);
+  const [text, setText] = useState("");
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -98,8 +100,41 @@ function App() {
     setIsLoginOpen(false);
   };
 
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!file) return alert("Select a PDF file first!");
+
+    const formData = new FormData();
+    formData.append("pdf", file);
+
+    setLoading(true);
+    const response = await fetch("/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    setLoading(false);
+    setText(data.text || "No text found.");
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      <div style={{ padding: "20px" }}>
+        <h1>Upload & Read PDF</h1>
+        <input
+          type="file"
+          accept="application/pdf"
+          onChange={handleFileChange}
+        />
+        <button onClick={handleUpload} disabled={loading}>
+          {loading ? "Processing..." : "Upload"}
+        </button>
+        {text && <pre>{text}</pre>}
+      </div>
       <Navbar
         isDropdownOpen={isDropdownOpen}
         toggleDropdown={toggleDropdown}
