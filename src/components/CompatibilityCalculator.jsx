@@ -20,6 +20,10 @@ const CompatibilityCalculator = () => {
     const description = e.target.value;
     setJobDescription(description);
   };
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) uploadPDF(file);
+  };
 
   /*const handleCvUpload = async (e) => {
     const file = e.target.files[0];
@@ -239,7 +243,7 @@ const CompatibilityCalculator = () => {
           <input
             type="file"
             accept=".pdf,.doc,.docx"
-            onChange={handleCvUpload}
+            onChange={handleFileChange}
             className="border p-2 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
