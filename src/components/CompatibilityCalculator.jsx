@@ -24,7 +24,11 @@ const CompatibilityCalculator = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     console.log("File", file);
-    if (file) uploadPDF(file);
+    if (file) {
+      uploadPDF(file);
+    } else {
+      console.error("Invalid file type. Please upload a PDF or DOCX file.");
+    }
     setCvFile(file);
   };
 
@@ -84,16 +88,17 @@ const CompatibilityCalculator = () => {
 
       if (data.text) {
         console.log("Extracted Text:", data.text);
+        setConsultantSkills(data.text);
       } else {
-        console.warn("No text extracted from PDF.");
+        console.error("No text extracted from PDF.");
       }
 
-      if (data.cvSkills) {
+      /*if (data.cvSkills) {
         console.log("Extracted CV Skills:", data.cvSkills);
         setConsultantSkills(data.cvSkills);
       } else {
         console.warn("cvSkills is undefined.");
-      }
+      }*/
     } catch (error) {
       console.error("Error uploading PDF:", error);
     }
