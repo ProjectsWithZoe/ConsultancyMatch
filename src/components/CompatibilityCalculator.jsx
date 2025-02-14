@@ -65,17 +65,21 @@ const CompatibilityCalculator = () => {
     }
   }
 
-  async function uploadPDF(file) {
+  async function uploadPDF(cvFile) {
     const formData = new FormData();
-    formData.append("pdf", file);
+    formData.append("pdf", cvFile);
 
     const response = await fetch("/api/upload", {
       method: "POST",
       body: formData,
     });
-
     const data = await response.json();
-    console.log("Extracted text:", data.text);
+    console.log("Data", data);
+    console.log("Extracted CV Skills:", data.cvSkills);
+    setConsultantSkills(data.cvSkills);
+
+    //const data = await response.json();
+    //console.log("Extracted text:", data.text);
   }
 
   // 2 .get consultant skills from CV
@@ -256,7 +260,8 @@ const CompatibilityCalculator = () => {
             className={`${
               consultantSkills.length > 0 ? "bg-green-600" : "bg-indigo-600"
             } text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-indigo-500 disabled:bg-gray-400 disabled:cursor-not-allowed`}
-            onClick={() => extractCvSkills(cvFile)}
+            //onClick={() => extractCvSkills(cvFile)}
+            onClick={() => uploadPDF(cvFile)}
             disabled={gettingCV}
           >
             {consultantSkills.length > 0
