@@ -45,7 +45,7 @@ const CompatibilityCalculator = () => {
     formData.append("pdf", file);
 
     setLoading(true);
-    const response = await fetch("/api/upload", {
+    const response = await fetch("/upload", {
       method: "POST",
       body: formData,
     });

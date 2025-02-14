@@ -5,7 +5,7 @@ import cors from "cors";
 import fs from "fs";
 
 const app = express();
-const upload = multer({ dest: "tmp/" }); // Temporary storage
+const upload = multer({ dest: "/tmp/" }); // Temporary storage
 
 app.use(cors()); // Allow frontend to communicate
 
