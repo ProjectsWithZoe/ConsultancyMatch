@@ -10,14 +10,16 @@ import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const pdf = require("pdf-parse");
 dotenv.config();
-const upload = multer({ dest: "/tmp/" });
+
+//const upload = multer({ dest: "/tmp/" });
+//const upload = multer({ storage: multer.memoryStorage() });
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 // Function to extract text from PDF
-const extractTextFromPdf = async (filePath) => {
+/*const extractTextFromPdf = async (filePath) => {
   try {
     const dataBuffer = fs.readFileSync(filePath);
     const data = await pdf(dataBuffer);
@@ -27,6 +29,18 @@ const extractTextFromPdf = async (filePath) => {
     console.error("Error extracting text from PDF:", error);
     throw error;
   }
+};*/
+const uploadPDF = async (file) => {
+  const formData = new FormData();
+  formData.append("pdf", file);
+
+  const response = await fetch("/api/upload", {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await response.json();
+  console.log("Extracted text:", data.text);
 };
 
 // Function to extract text from DOCX

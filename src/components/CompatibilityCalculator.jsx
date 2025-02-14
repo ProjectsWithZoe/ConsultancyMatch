@@ -21,12 +21,12 @@ const CompatibilityCalculator = () => {
     setJobDescription(description);
   };
 
-  const handleCvUpload = async (e) => {
+  /*const handleCvUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     setCvFile(file);
-  };
+  };*/
 
   // 1 .get job skills from job description
 
@@ -56,6 +56,19 @@ const CompatibilityCalculator = () => {
     } finally {
       setGettingJobSkills(false);
     }
+  }
+
+  async function uploadPDF(file) {
+    const formData = new FormData();
+    formData.append("pdf", file);
+
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    console.log("Extracted text:", data.text);
   }
 
   // 2 .get consultant skills from CV
