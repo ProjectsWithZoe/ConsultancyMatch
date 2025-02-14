@@ -6,7 +6,7 @@ import { fileFromPath } from "openai";
 const CompatibilityCalculator = () => {
   const [consultantSkills, setConsultantSkills] = useState([]);
   const [jobDescription, setJobDescription] = useState("");
-  const [cvFile, setCvFile] = useState(null);
+  //const [cvFile, setCvFile] = useState(null);
   const [extractedJobSkills, setExtractedJobSkills] = useState([]);
   const [result, setResult] = useState(null);
   const [gettingCV, setGettingCV] = useState(false);
@@ -15,13 +15,15 @@ const CompatibilityCalculator = () => {
   const [commonSkills, setCommonSkills] = useState([]);
   const [missingSkills, setMissingSKills] = useState([]);
   const [matchPercentage, setMatchPercentage] = useState("");
+  const [file, setFile] = useState(null);
+  const [text, setText] = useState("");
 
   //Handle Job Description Input and Skills Extraction
   const handleJobDescriptionChange = async (e) => {
     const description = e.target.value;
     setJobDescription(description);
   };
-  const handleFileChange = (event) => {
+  /*const handleFileChange = (event) => {
     const file = event.target.files[0];
     console.log("File", file);
     if (file) {
@@ -30,6 +32,22 @@ const CompatibilityCalculator = () => {
       console.error("Invalid file type. Please upload a PDF or DOCX file.");
     }
     setCvFile(file);
+  };*/
+  const handleUpload = async () => {
+    if (!file) return alert("Select a PDF file first!");
+
+    const formData = new FormData();
+    formData.append("pdf", file);
+
+    setLoading(true);
+    const response = await fetch("/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    setLoading(false);
+    setText(data.text || "No text found.");
   };
 
   /*const handleCvUpload = async (e) => {
@@ -69,7 +87,7 @@ const CompatibilityCalculator = () => {
     }
   }
 
-  async function uploadPDF(cvFile) {
+  /*async function uploadPDF(cvFile) {
     const formData = new FormData();
     formData.append("pdf", cvFile);
 
@@ -93,16 +111,16 @@ const CompatibilityCalculator = () => {
         console.error("No text extracted from PDF.");
       }
 
-      /*if (data.cvSkills) {
+      if (data.cvSkills) {
         console.log("Extracted CV Skills:", data.cvSkills);
         setConsultantSkills(data.cvSkills);
       } else {
         console.warn("cvSkills is undefined.");
-      }*/
+      }
     } catch (error) {
       console.error("Error uploading PDF:", error);
     }
-  }
+  }*/
 
   // 2 .get consultant skills from CV
   /*async function extractCvSkills(cvFile) {
@@ -264,7 +282,19 @@ const CompatibilityCalculator = () => {
           2. Upload your CV to get your skills.
         </h1>
 
-        {/* CV Upload */}
+        <div style={{ padding: "20px" }}>
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={handleFileChange}
+          />
+          <button onClick={handleUpload} disabled={loading}>
+            {loading ? "Processing..." : "Upload"}
+          </button>
+          {text && <pre>{text}</pre>}
+        </div>
+
+        {/* CV Upload 
         <div className="mb-6">
           <label className="block text-gray-700 font-medium mb-2">
             Upload CV (PDF/DOCX)
@@ -275,7 +305,7 @@ const CompatibilityCalculator = () => {
             onChange={handleFileChange}
             className="border p-2 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
-        </div>
+        </div>*/}
 
         <div className="flex justify-center mb-8">
           <button

@@ -1,43 +1,24 @@
-import formidable from "formidable";
-import fs from "fs";
+import express from "express";
+import multer from "multer";
 import pdfParse from "pdf-parse";
+import cors from "cors";
+import fs from "fs";
 
-export const config = {
-  api: {
-    bodyParser: false, // Disable default body parsing for file uploads
-  },
-};
+const app = express();
+const upload = multer({ dest: "tmp/" }); // Temporary storage
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+app.use(cors()); // Allow frontend to communicate
 
-  const form = formidable({
-    uploadDir: "/tmp", // Temporary directory for uploaded files
-    keepExtensions: true,
-  });
+app.post("/upload", upload.single("pdf"), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
   try {
-    const [fields, files] = await form.parse(req);
-    const pdfFile = files.pdf?.[0]?.filepath; // Correct way to access the file
+    const pdfBuffer = fs.readFileSync(req.file.path);
+    const pdfData = await pdfParse(pdfBuffer);
+    fs.unlinkSync(req.file.path); // Delete after reading
 
-    if (!pdfFile) {
-      return res.status(400).json({ error: "No file uploaded" });
-    }
-
-    const dataBuffer = fs.readFileSync(pdfFile);
-    const pdfData = await pdfParse(dataBuffer);
-
-    if (!pdfData.text) {
-      return res.status(400).json({ error: "No text extracted from the PDF" });
-    }
-
-    res.status(200).json({ text: pdfData.text });
-  } catch (error) {
-    console.error("Error extracting text:", error);
-    res
-      .status(500)
-      .json({ error: "Error extracting text", details: error.message });
+    res.json({ text: pdfData.text });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to parse PDF" });
   }
-}
+});
