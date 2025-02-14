@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase"; // Assuming Supabase for authentication & DB
 import toast from "react-hot-toast";
+import { fileFromPath } from "openai";
 
 const CompatibilityCalculator = () => {
   const [consultantSkills, setConsultantSkills] = useState([]);
@@ -22,7 +23,9 @@ const CompatibilityCalculator = () => {
   };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+    console.log("File", file);
     if (file) uploadPDF(file);
+    setCvFile(file);
   };
 
   /*const handleCvUpload = async (e) => {
@@ -76,7 +79,7 @@ const CompatibilityCalculator = () => {
   }
 
   // 2 .get consultant skills from CV
-  async function extractCvSkills(cvFile) {
+  /*async function extractCvSkills(cvFile) {
     if (!cvFile) {
       alert("Please upload a CV.");
       return;
@@ -102,7 +105,7 @@ const CompatibilityCalculator = () => {
     } finally {
       setGettingCV(false);
     }
-  }
+  }*/
 
   // 3 .compare job skills and consultant skills
 
