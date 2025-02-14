@@ -76,6 +76,7 @@ const CompatibilityCalculator = () => {
       });
 
       const data = await response.json();
+      console.log(data);
       console.log("Extracted CV Skills:", data.cvSkills);
       setConsultantSkills(data.cvSkills);
     } catch (error) {
