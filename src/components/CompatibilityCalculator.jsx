@@ -67,6 +67,7 @@ const CompatibilityCalculator = () => {
 
     const formData = new FormData();
     formData.append("cv", cvFile);
+    console.log("Formdata", formData);
     setGettingCV(true);
 
     try {
@@ -76,7 +77,7 @@ const CompatibilityCalculator = () => {
       });
 
       const data = await response.json();
-      console.log(data);
+      console.log("Data", data);
       console.log("Extracted CV Skills:", data.cvSkills);
       setConsultantSkills(data.cvSkills);
     } catch (error) {

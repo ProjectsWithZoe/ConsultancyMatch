@@ -21,7 +21,7 @@ const extractTextFromPdf = async (filePath) => {
   try {
     const dataBuffer = fs.readFileSync(filePath);
     const data = await pdf(dataBuffer);
-    console.log(data.text);
+    console.log("Data.text", data.text);
     return data.text;
   } catch (error) {
     console.error("Error extracting text from PDF:", error);
@@ -45,6 +45,7 @@ export default async function handler(req, res) {
       }
 
       const cvFile = req.file;
+      console.log("Cv file", cvFile);
 
       if (!cvFile) {
         return res.status(400).json({ error: "CV file is required." });
@@ -55,13 +56,13 @@ export default async function handler(req, res) {
         // Handle PDF or DOCX file
         if (cvFile.mimetype === "application/pdf") {
           cvText = await extractTextFromPdf(cvFile.path);
-          console.log(cvText);
+          console.log("CVtest", cvText);
         } else if (
           cvFile.mimetype ===
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ) {
           cvText = await extractTextFromDocx(cvFile.path);
-          console.log(cvText);
+          console.log("CVtext", cvText);
         } else {
           return res.status(400).json({
             error: "Invalid file type. Only PDF and DOCX are supported.",
