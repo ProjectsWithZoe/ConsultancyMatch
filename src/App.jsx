@@ -123,18 +123,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div style={{ padding: "20px" }}>
-        <h1>Upload & Read PDF</h1>
-        <input
-          type="file"
-          accept="application/pdf"
-          onChange={handleFileChange}
-        />
-        <button onClick={handleUpload} disabled={loading}>
-          {loading ? "Processing..." : "Upload"}
-        </button>
-        {text && <pre>{text}</pre>}
-      </div>
       <Navbar
         isDropdownOpen={isDropdownOpen}
         toggleDropdown={toggleDropdown}
@@ -253,7 +241,18 @@ function App() {
         />
       )}
       {showSignup && <SignupModal onClose={() => setShowSignup(false)} />}*/}
-
+      <div style={{ padding: "20px" }}>
+        <h1>Upload & Read PDF</h1>
+        <input
+          type="file"
+          accept="application/pdf"
+          onChange={handleFileChange}
+        />
+        <button onClick={handleUpload} disabled={loading}>
+          {loading ? "Processing..." : "Upload"}
+        </button>
+        {text && <pre>{text}</pre>}
+      </div>
       <footer className="bg-gray-50">
         <div className="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
           <div className="mt-8 md:order-1 md:mt-0">
