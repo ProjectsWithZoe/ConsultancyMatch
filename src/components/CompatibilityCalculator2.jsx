@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { PDFDocument } from "pdf-lib";
 
 function CompatibilityCalculator2() {
   const [file, setFile] = useState(null);
@@ -10,38 +9,29 @@ function CompatibilityCalculator2() {
     setFile(e.target.files[0]);
   };
 
-  const handleExtractText = async () => {
+  const handleUpload = async () => {
     if (!file) return alert("Select a PDF file first!");
 
+    const formData = new FormData();
+    formData.append("pdf", file);
+
     setLoading(true);
+    const response = await fetch("consultancy-match.vercel.app/api/upload", {
+      method: "POST",
+      body: formData,
+    });
 
-    try {
-      const reader = new FileReader();
-      reader.readAsArrayBuffer(file);
-
-      reader.onload = async function () {
-        const arrayBuffer = reader.result;
-        const pdfDoc = await PDFDocument.load(arrayBuffer);
-        const extractedText = await pdfDoc.getTextContent(); // Extract text
-        setText(
-          extractedText.items.map((item) => item.str).join(" ") ||
-            "No text found."
-        );
-      };
-    } catch (error) {
-      console.error("Error extracting text:", error);
-      alert("Failed to extract text.");
-    }
-
+    const data = await response.json();
     setLoading(false);
+    setText(data.text || "No text found.");
   };
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>Extract Text from PDF</h1>
+      <h1>Upload & Read PDF</h1>
       <input type="file" accept="application/pdf" onChange={handleFileChange} />
-      <button onClick={handleExtractText} disabled={loading}>
-        {loading ? "Processing..." : "Extract Text"}
+      <button onClick={handleUpload} disabled={loading}>
+        {loading ? "Processing..." : "Upload"}
       </button>
       {text && <pre>{text}</pre>}
     </div>

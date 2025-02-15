@@ -5,18 +5,16 @@ import cors from "cors";
 import fs from "fs";
 
 const app = express();
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-//const pdfData = await pdfParse(req.file.buffer);
+const upload = multer({ dest: "tmp/" }); // Temporary storage
 
 app.use(cors()); // Allow frontend to communicate
 
-app.post("/upload", upload.single("pdf"), async (req, res) => {
+app.post("/api/upload", upload.single("pdf"), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
   try {
-    //const pdfBuffer = fs.readFileSync(req.file.path);
-    const pdfData = await pdfParse(req.file.buffer);
+    const pdfBuffer = fs.readFileSync(req.file.path);
+    const pdfData = await pdfParse(pdfBuffer);
     fs.unlinkSync(req.file.path); // Delete after reading
 
     res.json({ text: pdfData.text });
