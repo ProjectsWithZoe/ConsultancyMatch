@@ -16,13 +16,10 @@ function CompatibilityCalculator2() {
     formData.append("pdf", file);
 
     setLoading(true);
-    const response = await fetch(
-      "consultancy-match-git-old-state-projectswithzoes-projects.vercel.app/api/upload",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
 
     const data = await response.json();
     setLoading(false);
