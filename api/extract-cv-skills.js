@@ -30,18 +30,6 @@ const openai = new OpenAI({
     throw error;
   }
 };*/
-const uploadPDF = async (file) => {
-  const formData = new FormData();
-  formData.append("pdf", file);
-
-  const response = await fetch("/api/upload", {
-    method: "POST",
-    body: formData,
-  });
-
-  const data = await response.json();
-  console.log("Extracted text:", data.text);
-};
 
 // Function to extract text from DOCX
 const extractTextFromDocx = async (filePath) => {

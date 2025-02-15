@@ -11,7 +11,7 @@ const upload = multer({ storage });
 
 app.use(cors()); // Allow frontend to communicate
 
-app.post("/upload", upload.single("pdf"), async (req, res) => {
+app.post("/api/upload", upload.single("pdf"), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
   try {
