@@ -15,6 +15,7 @@ import YourMatches from "./components/YourMatches";
 import About from "./components/About";
 import CompatibilityCalculator from "./components/CompatibilityCalculator";
 import Contact from "./components/Contact";
+import CompatibilityCalculator2 from "./components/CompatibilityCalculator2";
 
 function App() {
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
@@ -201,7 +202,7 @@ function App() {
           <Route path="/about" element={<About />}></Route>
           <Route
             path="/compatibility-calculator"
-            element={<CompatibilityCalculator />}
+            element={<CompatibilityCalculator2 />}
           />
           <Route path="/contact" element={<Contact />} />
         </Routes>
